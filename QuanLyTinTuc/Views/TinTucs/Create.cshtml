@@ -1,0 +1,241 @@
+﻿@model QuanLyTinTuc.Models.TinTuc
+
+@{
+    ViewBag.Title = "thêm-tin-mới";
+}
+
+<style>
+    .discord-form {
+        max-width: 800px;
+    }
+
+    .form-title {
+        color: #f2f3f5;
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-description {
+        color: #b5bac1;
+        margin-bottom: 25px;
+    }
+
+    .discord-field {
+        margin-bottom: 18px;
+    }
+
+        .discord-field label {
+            display: block;
+            color: #b5bac1;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+    .discord-input {
+        width: 100% !important;
+        max-width: none !important;
+        height: 42px;
+    }
+
+    .discord-textarea {
+        width: 100% !important;
+        max-width: none !important;
+        resize: vertical;
+    }
+
+    .upload-box {
+        padding: 18px;
+        border: 2px dashed #4e5058;
+        border-radius: 7px;
+        background: #2b2d31;
+    }
+
+    .form-actions {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #3f4147;
+    }
+
+        .form-actions .btn {
+            margin-right: 5px;
+        }
+</style>
+
+
+<div class="discord-form">
+
+    <div class="form-title">
+        Tạo tin tức mới
+    </div>
+
+    <div class="form-description">
+        Đăng một bài viết mới vào hệ thống quản lý tin tức.
+    </div>
+
+
+    @using (Html.BeginForm(
+        "Create",
+        "TinTucs",
+        FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(
+            true,
+            "",
+            new { @class = "text-danger" })
+
+
+        <div class="discord-field">
+
+            <label>Mã tin tức</label>
+
+            @Html.TextBoxFor(
+                m => m.MaTinTuc,
+                new
+                {
+                    @class = "form-control discord-input",
+                    placeholder = "Ví dụ: TT006"
+                })
+
+            @Html.ValidationMessageFor(
+                m => m.MaTinTuc,
+                "",
+                new { @class = "text-danger" })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Tiêu đề</label>
+
+            @Html.TextBoxFor(
+                m => m.TieuDe,
+                new
+                {
+                    @class = "form-control discord-input",
+                    placeholder = "Nhập tiêu đề bài viết..."
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Tóm tắt</label>
+
+            @Html.TextAreaFor(
+                m => m.TomTat,
+                new
+                {
+                    @class = "form-control discord-textarea",
+                    rows = "3",
+                    placeholder = "Nhập nội dung tóm tắt..."
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Nội dung</label>
+
+            @Html.TextAreaFor(
+                m => m.NoiDung,
+                new
+                {
+                    @class = "form-control discord-textarea",
+                    rows = "8",
+                    placeholder = "Nhập nội dung bài viết..."
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Ngày gửi</label>
+
+            @Html.TextBoxFor(
+                m => m.NgayGui,
+                new
+                {
+                    @class = "form-control discord-input",
+                    type = "datetime-local"
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Người gửi</label>
+
+            @Html.TextBoxFor(
+                m => m.NguoiGui,
+                new
+                {
+                    @class = "form-control discord-input",
+                    placeholder = "Nhập tên người gửi..."
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Ảnh bài viết</label>
+
+            <div class="upload-box">
+
+                <input type="file"
+                       name="AnhUpload"
+                       accept="image/*"
+                       style="color:#dbdee1;" />
+
+            </div>
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Chủ đề</label>
+
+            @Html.TextBoxFor(
+                m => m.ChuDe,
+                new
+                {
+                    @class = "form-control discord-input",
+                    placeholder = "Ví dụ: Công nghệ"
+                })
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                Đăng tin
+
+            </button>
+
+            <a href="@Url.Action("Index")"
+               class="btn"
+               style="background:#4e5058;color:white;">
+
+                Hủy
+
+            </a>
+
+        </div>
+    }
+
+</div>

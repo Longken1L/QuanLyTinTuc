@@ -1,0 +1,263 @@
+﻿@model QuanLyTinTuc.Models.TinTuc
+
+@{
+    ViewBag.Title = "chỉnh-sửa-tin";
+}
+
+<style>
+    .discord-form {
+        max-width: 800px;
+    }
+
+    .form-title {
+        color: #f2f3f5;
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-description {
+        color: #b5bac1;
+        margin-bottom: 25px;
+    }
+
+    .discord-field {
+        margin-bottom: 18px;
+    }
+
+        .discord-field label {
+            display: block;
+            color: #b5bac1;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+    .discord-input,
+    .discord-textarea {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    .discord-input {
+        height: 42px;
+    }
+
+    .discord-textarea {
+        resize: vertical;
+    }
+
+    .current-image {
+        display: block;
+        max-width: 400px;
+        max-height: 240px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .upload-box {
+        padding: 18px;
+        border: 2px dashed #4e5058;
+        border-radius: 7px;
+        background: #2b2d31;
+    }
+
+    .form-actions {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #3f4147;
+    }
+
+        .form-actions .btn {
+            margin-right: 5px;
+        }
+</style>
+
+
+<div class="discord-form">
+
+    <div class="form-title">
+        Chỉnh sửa tin tức
+    </div>
+
+    <div class="form-description">
+        Đang chỉnh sửa @Model.MaTinTuc.Trim()
+    </div>
+
+
+    @using (Html.BeginForm(
+        "Edit",
+        "TinTucs",
+        FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(
+            true,
+            "",
+            new { @class = "text-danger" })
+
+        @Html.HiddenFor(m => m.MaTinTuc)
+
+        @Html.HiddenFor(m => m.URLAnh)
+
+
+        <div class="discord-field">
+
+            <label>Mã tin tức</label>
+
+            <input type="text"
+                   value="@Model.MaTinTuc.Trim()"
+                   class="form-control discord-input"
+                   disabled />
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Tiêu đề</label>
+
+            @Html.TextBoxFor(
+                m => m.TieuDe,
+                new
+                {
+                    @class = "form-control discord-input"
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Tóm tắt</label>
+
+            @Html.TextAreaFor(
+                m => m.TomTat,
+                new
+                {
+                    @class = "form-control discord-textarea",
+                    rows = "3"
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Nội dung</label>
+
+            @Html.TextAreaFor(
+                m => m.NoiDung,
+                new
+                {
+                    @class = "form-control discord-textarea",
+                    rows = "8"
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Ngày gửi</label>
+
+            @Html.TextBoxFor(
+                m => m.NgayGui,
+                "{0:yyyy-MM-ddTHH:mm}",
+                new
+                {
+                    @class = "form-control discord-input",
+                    type = "datetime-local"
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Người gửi</label>
+
+            @Html.TextBoxFor(
+                m => m.NguoiGui,
+                new
+                {
+                    @class = "form-control discord-input"
+                })
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Ảnh hiện tại</label>
+
+            @if (!String.IsNullOrEmpty(Model.URLAnh))
+            {
+                <img src="@Url.Content(Model.URLAnh)"
+                     class="current-image" />
+            }
+            else
+            {
+                <div style="color:#949ba4;">
+                    Chưa có ảnh
+                </div>
+            }
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Thay ảnh mới</label>
+
+            <div class="upload-box">
+
+                <input type="file"
+                       name="AnhUpload"
+                       accept="image/*"
+                       style="color:#dbdee1;" />
+
+            </div>
+
+        </div>
+
+
+        <div class="discord-field">
+
+            <label>Chủ đề</label>
+
+            @Html.TextBoxFor(
+                m => m.ChuDe,
+                new
+                {
+                    @class = "form-control discord-input"
+                })
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button type="submit"
+                    class="btn btn-primary">
+
+                Lưu thay đổi
+
+            </button>
+
+            <a href="@Url.Action("Index")"
+               class="btn"
+               style="background:#4e5058;color:white;">
+
+                Hủy
+
+            </a>
+
+        </div>
+    }
+
+</div>

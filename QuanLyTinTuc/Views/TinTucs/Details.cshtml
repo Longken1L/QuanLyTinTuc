@@ -1,0 +1,218 @@
+﻿@model QuanLyTinTuc.Models.TinTuc
+
+@{
+    ViewBag.Title = "chi-tiết-tin";
+}
+
+<style>
+    .detail-post {
+        max-width: 900px;
+        background: #2b2d31;
+        border-radius: 8px;
+        padding: 25px;
+    }
+
+    .detail-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .detail-avatar {
+        width: 48px;
+        min-width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #5865f2;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        margin-right: 12px;
+    }
+
+    .detail-author {
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .detail-time {
+        color: #949ba4;
+        font-size: 12px;
+        margin-top: 3px;
+    }
+
+    .detail-title {
+        color: white;
+        font-size: 27px;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .detail-summary {
+        color: #f2f3f5;
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .detail-content {
+        color: #dbdee1;
+        line-height: 1.7;
+        font-size: 15px;
+        white-space: pre-line;
+    }
+
+    .detail-image {
+        display: block;
+        max-width: 700px;
+        max-height: 450px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+
+    .detail-category {
+        display: inline-block;
+        background: #1e1f22;
+        color: #b5bac1;
+        border-radius: 15px;
+        padding: 5px 10px;
+        margin-top: 10px;
+    }
+
+    .detail-actions {
+        border-top: 1px solid #3f4147;
+        margin-top: 25px;
+        padding-top: 20px;
+    }
+
+        .detail-actions .btn {
+            margin-right: 5px;
+        }
+</style>
+
+
+<div class="detail-post">
+
+
+    <div class="detail-header">
+
+        <div class="detail-avatar">
+
+            @if (!String.IsNullOrEmpty(Model.NguoiGui))
+            {
+                @Model.NguoiGui.Substring(0, 1).ToUpper()
+            }
+            else
+            {
+                @:A
+            }
+
+        </div>
+
+
+        <div>
+
+            <div class="detail-author">
+
+                @(String.IsNullOrEmpty(Model.NguoiGui)
+                    ? "Ẩn danh"
+                    : Model.NguoiGui)
+
+            </div>
+
+
+            <div class="detail-time">
+
+                @Model.MaTinTuc.Trim()
+
+                @if (Model.NgayGui.HasValue)
+                {
+                    @: •
+                    @Model.NgayGui.Value.ToString("dd/MM/yyyy HH:mm")
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="detail-title">
+        @Model.TieuDe
+    </div>
+
+
+    @if (!String.IsNullOrEmpty(Model.TomTat))
+    {
+        <div class="detail-summary">
+            @Model.TomTat
+        </div>
+    }
+
+
+    <div class="detail-content">
+        @Model.NoiDung
+    </div>
+
+
+    @if (!String.IsNullOrEmpty(Model.URLAnh))
+    {
+        <img src="@Url.Content(Model.URLAnh)"
+             class="detail-image"
+             alt="@Model.TieuDe" />
+    }
+
+
+    @if (!String.IsNullOrEmpty(Model.ChuDe))
+    {
+        <span class="detail-category">
+            # @Model.ChuDe
+        </span>
+    }
+
+
+    <div class="detail-actions">
+
+        @Html.ActionLink(
+            "Sửa bài viết",
+            "Edit",
+            new
+            {
+                id = Model.MaTinTuc.Trim()
+            },
+            new
+            {
+                @class = "btn btn-primary"
+            })
+
+
+        @Html.ActionLink(
+            "Xóa",
+            "Delete",
+            new
+            {
+                id = Model.MaTinTuc.Trim()
+            },
+            new
+            {
+                @class = "btn btn-danger"
+            })
+
+
+        <a href="@Url.Action("Index")"
+           class="btn"
+           style="background:#4e5058;color:white;">
+
+            Quay lại
+
+        </a>
+
+    </div>
+
+</div>

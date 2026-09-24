@@ -1,0 +1,654 @@
+﻿@model IEnumerable<QuanLyTinTuc.Models.TinTuc>
+
+@{
+    ViewBag.Title = "danh-sách-tin";
+
+    string searchString = Request.QueryString["searchString"];
+    string chuDe = Request.QueryString["chuDe"];
+}
+
+<style>
+
+    /* =========================
+       PHẦN GIỚI THIỆU
+       ========================= */
+
+    .welcome {
+        padding-bottom: 18px;
+        border-bottom: 1px solid #3f4147;
+        margin-bottom: 20px;
+    }
+
+        .welcome h2 {
+            color: white;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 7px;
+        }
+
+        .welcome p {
+            color: #b5bac1;
+            margin: 0;
+        }
+
+
+    /* =========================
+       THANH TÌM KIẾM
+       ========================= */
+
+    .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .search-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .search-input {
+        width: 350px !important;
+        max-width: 350px !important;
+        height: 38px;
+    }
+
+    .discord-add {
+        margin-left: auto;
+        background: #248046;
+        color: white !important;
+        border: none;
+        padding: 9px 16px;
+        border-radius: 4px;
+        text-decoration: none !important;
+        font-weight: bold;
+    }
+
+        .discord-add:hover {
+            background: #1a6334;
+        }
+
+
+    /* =========================
+       HIỂN THỊ BỘ LỌC
+       ========================= */
+
+    .filter-info {
+        background: #2b2d31;
+        border-radius: 5px;
+        padding: 10px 14px;
+        margin-bottom: 15px;
+        color: #b5bac1;
+        max-width: 1000px;
+    }
+
+        .filter-info strong {
+            color: #f2f3f5;
+        }
+
+
+    /* =========================
+       DANH SÁCH TIN
+       ========================= */
+
+    .news-feed {
+        max-width: 1000px;
+    }
+
+    .news-post {
+        display: flex;
+        padding: 16px 10px;
+        border-radius: 5px;
+        transition: background .15s;
+        border-bottom: 1px solid #3f4147;
+    }
+
+        .news-post:hover {
+            background: #2e3035;
+        }
+
+
+    /* =========================
+       AVATAR
+       ========================= */
+
+    .post-avatar {
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #5865f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        margin-right: 15px;
+    }
+
+
+    /* =========================
+       NỘI DUNG BÀI
+       ========================= */
+
+    .post-body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .post-header {
+        margin-bottom: 5px;
+    }
+
+    .post-author {
+        color: #f2f3f5;
+        font-weight: bold;
+        font-size: 15px;
+    }
+
+    .post-date {
+        color: #949ba4;
+        font-size: 12px;
+        margin-left: 7px;
+    }
+
+    .post-code {
+        color: #949ba4;
+        font-size: 12px;
+        margin-left: 7px;
+    }
+
+    .post-title {
+        color: #f2f3f5;
+        font-size: 18px;
+        font-weight: bold;
+        margin: 7px 0;
+    }
+
+    .post-summary {
+        color: #dbdee1;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    .post-content {
+        color: #b5bac1;
+        line-height: 1.5;
+        margin-bottom: 12px;
+        white-space: pre-line;
+    }
+
+
+    /* =========================
+       ẢNH
+       ========================= */
+
+    .post-image {
+        display: block;
+        width: auto;
+        max-width: 420px;
+        max-height: 250px;
+        border-radius: 8px;
+        margin-top: 10px;
+        object-fit: cover;
+    }
+
+
+    /* =========================
+       CHỦ ĐỀ
+       ========================= */
+
+    .category {
+        display: inline-block;
+        background: #1e1f22;
+        color: #b5bac1;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        margin-top: 10px;
+        text-decoration: none;
+    }
+
+        .category:hover {
+            background: #404249;
+            color: white;
+            text-decoration: none;
+        }
+
+
+    /* =========================
+       NÚT CHỨC NĂNG
+       ========================= */
+
+    .post-actions {
+        margin-top: 12px;
+    }
+
+        .post-actions a {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+    .action-detail {
+        background: #4e5058;
+        color: white !important;
+    }
+
+        .action-detail:hover {
+            background: #6d6f78;
+        }
+
+    .action-edit {
+        background: #5865f2;
+        color: white !important;
+    }
+
+        .action-edit:hover {
+            background: #4752c4;
+        }
+
+    .action-delete {
+        color: #f23f42 !important;
+    }
+
+        .action-delete:hover {
+            background: rgba(242, 63, 66, .1);
+        }
+
+
+    /* =========================
+       KHÔNG CÓ KẾT QUẢ
+       ========================= */
+
+    .empty-message {
+        max-width: 1000px;
+        text-align: center;
+        padding: 60px 20px;
+        color: #949ba4;
+    }
+
+        .empty-message h3 {
+            color: #f2f3f5;
+        }
+
+
+    /* =========================
+       RESPONSIVE
+       ========================= */
+
+    @@media (max-width: 800px) {
+
+        .toolbar {
+            display: block;
+        }
+
+        .search-form {
+            display: block;
+        }
+
+        .search-input {
+            width: 100% !important;
+            max-width: none !important;
+            margin-bottom: 8px;
+        }
+
+        .discord-add {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .post-image {
+            max-width: 100%;
+        }
+    }
+</style>
+
+
+<!-- =========================================
+     TIÊU ĐỀ TRANG
+     ========================================= -->
+
+<div class="welcome">
+
+    @if (!String.IsNullOrWhiteSpace(chuDe))
+    {
+        <h2>
+            # @chuDe
+        </h2>
+
+        <p>
+            Các tin tức thuộc chủ đề @chuDe.
+        </p>
+    }
+    else
+    {
+        <h2>
+            # danh-sách-tin
+        </h2>
+
+        <p>
+            Theo dõi và quản lý các bài viết trong hệ thống.
+        </p>
+    }
+
+</div>
+
+
+<!-- =========================================
+     THANH TÌM KIẾM
+     ========================================= -->
+
+<div class="toolbar">
+
+    @using (Html.BeginForm(
+        "Index",
+        "TinTucs",
+        FormMethod.Get,
+        new { @class = "search-form" }))
+    {
+
+        if (!String.IsNullOrWhiteSpace(chuDe))
+        {
+            <input type="hidden"
+                   name="chuDe"
+                   value="@chuDe" />
+        }
+
+
+        <input type="text"
+               name="searchString"
+               value="@searchString"
+               class="form-control search-input"
+               placeholder="Tìm tiêu đề hoặc chủ đề..." />
+
+
+        <button type="submit"
+                class="btn btn-primary">
+
+            Tìm kiếm
+
+        </button>
+
+
+        <a href="@Url.Action("Index", "TinTucs")"
+           class="btn"
+           style="background:#4e5058;color:white;">
+
+            Tất cả
+
+        </a>
+    }
+
+
+    <a href="@Url.Action("Create", "TinTucs")"
+       class="discord-add">
+
+        + Thêm tin tức
+
+    </a>
+
+</div>
+
+
+<!-- =========================================
+     HIỂN THỊ ĐANG TÌM KIẾM
+     ========================================= -->
+
+@if (!String.IsNullOrWhiteSpace(searchString))
+{
+    <div class="filter-info">
+
+        Đang tìm kiếm:
+
+        <strong>
+            "@searchString"
+        </strong>
+
+        @if (!String.IsNullOrWhiteSpace(chuDe))
+        {
+            <span>
+                trong chủ đề
+                <strong>@chuDe</strong>
+            </span>
+        }
+
+    </div>
+}
+
+
+<!-- =========================================
+     DANH SÁCH TIN
+     ========================================= -->
+
+<div class="news-feed">
+
+    @foreach (var item in Model)
+    {
+
+        <div class="news-post">
+
+
+            <!-- AVATAR -->
+
+            <div class="post-avatar">
+
+                @if (!String.IsNullOrWhiteSpace(item.NguoiGui))
+                {
+                    @item.NguoiGui.Substring(0, 1).ToUpper()
+                }
+                else
+                {
+                    @:A
+                }
+
+            </div>
+
+
+            <!-- NỘI DUNG -->
+
+            <div class="post-body">
+
+
+                <!-- NGƯỜI GỬI + NGÀY + MÃ -->
+
+                <div class="post-header">
+
+
+                    <span class="post-author">
+
+                        @(String.IsNullOrWhiteSpace(item.NguoiGui)
+                            ? "Ẩn danh"
+                            : item.NguoiGui)
+
+                    </span>
+
+
+                    @if (item.NgayGui.HasValue)
+                    {
+                        <span class="post-date">
+
+                            @item.NgayGui.Value.ToString(
+                                "dd/MM/yyyy HH:mm")
+
+                        </span>
+                    }
+
+
+                    <span class="post-code">
+
+                        •
+                        @(String.IsNullOrWhiteSpace(item.MaTinTuc)
+                            ? ""
+                            : item.MaTinTuc.Trim())
+
+                    </span>
+
+
+                </div>
+
+
+                <!-- TIÊU ĐỀ -->
+
+                <div class="post-title">
+
+                    @item.TieuDe
+
+                </div>
+
+
+                <!-- TÓM TẮT -->
+
+                @if (!String.IsNullOrWhiteSpace(item.TomTat))
+                {
+                    <div class="post-summary">
+
+                        @item.TomTat
+
+                    </div>
+                }
+
+
+                <!-- NỘI DUNG -->
+
+                @if (!String.IsNullOrWhiteSpace(item.NoiDung))
+                {
+                    <div class="post-content">
+
+                        @if (item.NoiDung.Length > 250)
+                        {
+                            @(item.NoiDung.Substring(0, 250) + "...")
+                        }
+                        else
+                        {
+                            @item.NoiDung
+                        }
+
+                    </div>
+                }
+
+
+                <!-- ẢNH -->
+
+                @if (!String.IsNullOrWhiteSpace(item.URLAnh))
+                {
+                    <img src="@Url.Content(item.URLAnh)"
+                         class="post-image"
+                         alt="@item.TieuDe" />
+                }
+
+
+                <!-- CHỦ ĐỀ -->
+
+                @if (!String.IsNullOrWhiteSpace(item.ChuDe))
+                {
+                    <div>
+
+                        <a href="@Url.Action(
+                                    "Index",
+                                    "TinTucs",
+                                    new
+                                    {
+                                        chuDe = item.ChuDe
+                                    })"
+                           class="category">
+
+                            # @item.ChuDe
+
+                        </a>
+
+                    </div>
+                }
+
+
+                <!-- NÚT -->
+
+                <div class="post-actions">
+
+
+                    @Html.ActionLink(
+                        "Chi tiết",
+                        "Details",
+                        new
+                        {
+                            id = item.MaTinTuc.Trim()
+                        },
+                        new
+                        {
+                            @class = "action-detail"
+                        })
+
+
+                    @Html.ActionLink(
+                        "Sửa",
+                        "Edit",
+                        new
+                        {
+                            id = item.MaTinTuc.Trim()
+                        },
+                        new
+                        {
+                            @class = "action-edit"
+                        })
+
+
+                    @Html.ActionLink(
+                        "Xóa",
+                        "Delete",
+                        new
+                        {
+                            id = item.MaTinTuc.Trim()
+                        },
+                        new
+                        {
+                            @class = "action-delete"
+                        })
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    }
+
+</div>
+
+
+<!-- =========================================
+     KHÔNG CÓ DỮ LIỆU
+     ========================================= -->
+
+@if (!Model.Any())
+{
+
+    <div class="empty-message">
+
+        <h3>
+            Không tìm thấy tin tức
+        </h3>
+
+        <p>
+            Không có bài viết nào phù hợp với nội dung tìm kiếm.
+        </p>
+
+        <a href="@Url.Action("Index", "TinTucs")"
+           class="btn btn-primary">
+
+            Xem tất cả tin
+
+        </a>
+
+    </div>
+
+}

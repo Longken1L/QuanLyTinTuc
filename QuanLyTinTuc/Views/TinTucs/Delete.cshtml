@@ -1,0 +1,175 @@
+﻿@model QuanLyTinTuc.Models.TinTuc
+
+@{
+    ViewBag.Title = "xóa-tin";
+}
+
+<style>
+    .delete-box {
+        max-width: 650px;
+        background: #2b2d31;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    }
+
+    .delete-header {
+        padding: 20px 25px;
+        color: white;
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .delete-body {
+        padding: 0 25px 25px 25px;
+    }
+
+    .delete-warning {
+        background: rgba(242,63,66,.1);
+        border: 1px solid #da373c;
+        color: #f2b6b7;
+        padding: 13px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .delete-title {
+        color: white;
+        font-size: 19px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .delete-info {
+        color: #b5bac1;
+        margin-top: 7px;
+    }
+
+    .delete-image {
+        display: block;
+        max-width: 350px;
+        max-height: 220px;
+        object-fit: cover;
+        border-radius: 7px;
+        margin-top: 15px;
+    }
+
+    .delete-actions {
+        border-top: 1px solid #3f4147;
+        padding: 18px 25px;
+        text-align: right;
+    }
+
+        .delete-actions form {
+            margin: 0;
+        }
+
+        .delete-actions .btn {
+            margin-left: 5px;
+        }
+</style>
+
+
+<div class="delete-box">
+
+
+    <div class="delete-header">
+        Xóa tin tức
+    </div>
+
+
+    <div class="delete-body">
+
+
+        <div class="delete-warning">
+
+            <strong>⚠ Cảnh báo</strong>
+
+            <br />
+
+            Bạn có chắc muốn xóa bài viết này không?
+            Thao tác này không thể hoàn tác.
+
+        </div>
+
+
+        <div class="delete-title">
+            @Model.TieuDe
+        </div>
+
+
+        <div class="delete-info">
+            Mã tin:
+            <strong>@Model.MaTinTuc.Trim()</strong>
+        </div>
+
+
+        <div class="delete-info">
+            Người gửi:
+            @Model.NguoiGui
+        </div>
+
+
+        <div class="delete-info">
+            Chủ đề:
+            #@Model.ChuDe
+        </div>
+
+
+        @if (Model.NgayGui.HasValue)
+        {
+            <div class="delete-info">
+
+                Ngày gửi:
+                @Model.NgayGui.Value.ToString(
+                    "dd/MM/yyyy HH:mm")
+
+            </div>
+        }
+
+
+        @if (!String.IsNullOrEmpty(Model.URLAnh))
+        {
+            <img src="@Url.Content(Model.URLAnh)"
+                 class="delete-image" />
+        }
+
+
+    </div>
+
+
+    <div class="delete-actions">
+
+
+        @using (Html.BeginForm(
+            "Delete",
+            "TinTucs",
+            new { id = Model.MaTinTuc.Trim() },
+            FormMethod.Post,
+            null))
+        {
+            @Html.AntiForgeryToken()
+
+
+            <a href="@Url.Action("Index")"
+               class="btn"
+               style="background:#4e5058;color:white;">
+
+                Hủy
+
+            </a>
+
+
+            <button type="submit"
+                    class="btn btn-danger">
+
+                Xóa bài viết
+
+            </button>
+        }
+
+
+    </div>
+
+
+</div>

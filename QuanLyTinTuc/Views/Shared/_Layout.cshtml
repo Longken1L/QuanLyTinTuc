@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - QL Tin Tức</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #313338;
+            color: #dbdee1;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            padding: 0 !important;
+        }
+
+        /* ===== TOÀN BỘ APP ===== */
+
+        .discord-app {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* ===== THANH SERVER BÊN TRÁI ===== */
+
+        .server-bar {
+            width: 72px;
+            min-width: 72px;
+            background: #1e1f22;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 12px;
+        }
+
+        .server-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: #5865f2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+
+            .server-logo:hover {
+                border-radius: 12px;
+                background: #4752c4;
+                color: white;
+                text-decoration: none;
+            }
+
+        .server-divider {
+            width: 32px;
+            height: 2px;
+            background: #35363c;
+            margin-bottom: 12px;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #313338;
+            color: #dbdee1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            text-decoration: none;
+            font-size: 20px;
+            transition: 0.2s;
+        }
+
+            .server-icon:hover {
+                background: #23a559;
+                color: white;
+                border-radius: 15px;
+                text-decoration: none;
+            }
+
+        /* ===== SIDEBAR ===== */
+
+        .channel-sidebar {
+            width: 240px;
+            min-width: 240px;
+            background: #2b2d31;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .server-name {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 15px;
+            font-weight: bold;
+            color: white;
+            border-bottom: 1px solid #1f2023;
+            box-shadow: 0 1px 0 rgba(0,0,0,.2);
+        }
+
+        .channel-area {
+            padding: 18px 8px;
+            flex: 1;
+        }
+
+        .channel-title {
+            color: #949ba4;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 0 8px;
+            margin-bottom: 6px;
+        }
+
+        .channel-link {
+            display: block;
+            padding: 7px 10px;
+            margin-bottom: 2px;
+            border-radius: 4px;
+            color: #949ba4;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+            .channel-link:before {
+                content: "#";
+                margin-right: 8px;
+                color: #80848e;
+                font-size: 19px;
+            }
+
+            .channel-link:hover {
+                background: #35373c;
+                color: #dbdee1;
+                text-decoration: none;
+            }
+
+            .channel-link.active {
+                background: #404249;
+                color: white;
+            }
+
+        .user-panel {
+            min-height: 52px;
+            background: #232428;
+            display: flex;
+            align-items: center;
+            padding: 7px 8px;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #5865f2;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .user-name {
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .user-status {
+            color: #b5bac1;
+            font-size: 11px;
+        }
+
+        /* ===== MAIN ===== */
+
+        .main-area {
+            flex: 1;
+            min-width: 0;
+            background: #313338;
+        }
+
+        .top-bar {
+            height: 50px;
+            background: #313338;
+            border-bottom: 1px solid #26272b;
+            box-shadow: 0 1px 3px rgba(0,0,0,.25);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .top-hash {
+            font-size: 24px;
+            color: #80848e;
+            margin-right: 8px;
+        }
+
+        .top-title {
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .page-content {
+            padding: 24px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== FORM CHUNG ===== */
+
+        .form-control {
+            background: #1e1f22 !important;
+            border: 1px solid #1e1f22 !important;
+            color: #dbdee1 !important;
+            box-shadow: none !important;
+        }
+
+            .form-control:focus {
+                border-color: #5865f2 !important;
+            }
+
+            .form-control::placeholder {
+                color: #80848e;
+            }
+
+        textarea.form-control {
+            resize: vertical;
+        }
+
+        label {
+            color: #b5bac1;
+        }
+
+        a {
+            color: #00a8fc;
+        }
+
+            a:hover {
+                color: #00a8fc;
+            }
+
+        .btn-primary {
+            background: #5865f2;
+            border-color: #5865f2;
+        }
+
+            .btn-primary:hover {
+                background: #4752c4;
+                border-color: #4752c4;
+            }
+
+        .btn-success {
+            background: #248046;
+            border-color: #248046;
+        }
+
+            .btn-success:hover {
+                background: #1a6334;
+                border-color: #1a6334;
+            }
+
+        .btn-danger {
+            background: #da373c;
+            border-color: #da373c;
+        }
+
+        hr {
+            border-color: #3f4147;
+        }
+
+        /* ===== MOBILE ===== */
+
+        @@media (max-width: 900px) {
+            .channel-sidebar {
+                display: none;
+            }
+
+            .page-content {
+                padding: 15px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="discord-app">
+
+        <!-- THANH ICON -->
+        <div class="server-bar">
+
+            <a href="@Url.Action("Index", "TinTucs")"
+               class="server-logo">
+                QL
+            </a>
+
+            <div class="server-divider"></div>
+
+            <a href="@Url.Action("Index", "TinTucs")"
+               class="server-icon"
+               title="Tin tức">
+                📰
+            </a>
+
+            <a href="@Url.Action("Create", "TinTucs")"
+               class="server-icon"
+               title="Thêm tin">
+                +
+            </a>
+
+        </div>
+
+
+        <!-- SIDEBAR -->
+        <div class="channel-sidebar">
+
+            <div class="server-name">
+                QUẢN LÝ TIN TỨC
+            </div>
+
+            <div class="channel-area">
+
+                <div class="channel-title">
+                    KÊNH TIN TỨC
+                </div>
+
+                <a href="@Url.Action("Index", "TinTucs")"
+                   class="channel-link active">
+                    tất-cả-tin
+                </a>
+
+                <a href="@Url.Action("Index", "TinTucs", new { searchString = "Công nghệ" })"
+                   class="channel-link">
+                    công-nghệ
+                </a>
+
+                <a href="@Url.Action("Index", "TinTucs", new { searchString = "Giáo dục" })"
+                   class="channel-link">
+                    giáo-dục
+                </a>
+
+                <a href="@Url.Action("Create", "TinTucs")"
+                   class="channel-link">
+                    thêm-tin-mới
+                </a>
+
+            </div>
+
+
+            <div class="user-panel">
+
+                <div class="user-avatar">
+                    A
+                </div>
+
+                <div>
+                    <div class="user-name">
+                        Admin
+                    </div>
+
+                    <div class="user-status">
+                        ● Trực tuyến
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- NỘI DUNG CHÍNH -->
+        <main class="main-area">
+
+            <div class="top-bar">
+
+                <span class="top-hash">#</span>
+
+                <span class="top-title">
+                    @ViewBag.Title
+                </span>
+
+            </div>
+
+            <div class="page-content">
+
+                @RenderBody()
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
